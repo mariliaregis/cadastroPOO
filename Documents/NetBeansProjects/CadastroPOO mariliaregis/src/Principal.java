@@ -1,5 +1,8 @@
 
+import java.io.IOException;
 import java.util.Scanner;
+import model.CadastroPOOMariliaregis.PessoaFisicaRepo;
+import model.CadastroPOOMariliaregis.PessoaJuridica;
 
 public class Principal {
     public static void main(String[] args) {
@@ -92,41 +95,39 @@ public class Principal {
         int id = scanner.nextInt();
         scanner.nextLine();
 
-        switch (tipo) {
-            case 1 -> {
-                PessoaFisica pf = repoFisica.obter(id);
-                if (pf != null) {
-                    pf.exibir();
-                    System.out.print("Novo Nome: ");
-                    String nome = scanner.nextLine();
-                    System.out.print("Novo CPF: ");
-                    String cpf = scanner.nextLine();
-                    System.out.print("Nova Idade: ");
-                    int idade = scanner.nextInt();
-                    pf.setNome(nome);
-                    pf.setCpf(cpf);
-                    pf.setIdade(idade);
-                    repoFisica.alterar(pf);
-                } else {
-                    System.out.println("Pessoa Física não encontrada!");
-                }
+        if (tipo == 1) {
+            PessoaFisica pf = repoFisica.obter(id);
+            if (pf != null) {
+                pf.exibir();
+                System.out.print("Novo Nome: ");
+                String nome = scanner.nextLine();
+                System.out.print("Novo CPF: ");
+                String cpf = scanner.nextLine();
+                System.out.print("Nova Idade: ");
+                int idade = scanner.nextInt();
+                pf.setNome(nome);
+                pf.setCpf(cpf);
+                pf.setIdade(idade);
+                repoFisica.alterar(pf);
+            } else {
+                System.out.println("Pessoa Física não encontrada!");
             }
-            case 2 -> {
-                PessoaJuridica pj = repoJuridica.obter(id);
-                if (pj != null) {
-                    pj.exibir();
-                    System.out.print("Novo Nome: ");
-                    String nome = scanner.nextLine();
-                    System.out.print("Novo CNPJ: ");
-                    String cnpj = scanner.nextLine();
-                    pj.setNome(nome);
-                    pj.setCnpj(cnpj);
-                    repoJuridica.alterar(pj);
-                } else {
-                    System.out.println("Pessoa Jurídica não encontrada!");
-                }
+        } else if (tipo == 2) {
+            PessoaJuridica pj = repoJuridica.obter(id);
+            if (pj != null) {
+                pj.exibir();
+                System.out.print("Novo Nome: ");
+                String nome = scanner.nextLine();
+                System.out.print("Novo CNPJ: ");
+                String cnpj = scanner.nextLine();
+                pj.setNome(nome);
+                pj.setCnpj(cnpj);
+                repoJuridica.alterar(pj);
+            } else {
+                System.out.println("Pessoa Jurídica não encontrada!");
             }
-            default -> System.out.println("Tipo inválido!");
+        } else {
+            System.out.println("Tipo inválido!");
         }
     }
 
@@ -140,10 +141,12 @@ public class Principal {
         System.out.print("ID da pessoa a ser excluída: ");
         int id = scanner.nextInt();
 
-        switch (tipo) {
-            case 1 -> repoFisica.excluir(id);
-            case 2 -> repoJuridica.excluir(id);
-            default -> System.out.println("Tipo inválido!");
+        if (tipo == 1) {
+            repoFisica.excluir(id);
+        } else if (tipo == 2) {
+            repoJuridica.excluir(id);
+        } else {
+            System.out.println("Tipo inválido!");
         }
     }
 
@@ -157,24 +160,22 @@ public class Principal {
         System.out.print("ID da pessoa: ");
         int id = scanner.nextInt();
 
-        switch (tipo) {
-            case 1 -> {
-                PessoaFisica pf = repoFisica.obter(id);
-                if (pf != null) {
-                    pf.exibir();
-                } else {
-                    System.out.println("Pessoa Física não encontrada!");
-                }
+        if (tipo == 1) {
+            PessoaFisica pf = repoFisica.obter(id);
+            if (pf != null) {
+                pf.exibir();
+            } else {
+                System.out.println("Pessoa Física não encontrada!");
             }
-            case 2 -> {
-                PessoaJuridica pj = repoJuridica.obter(id);
-                if (pj != null) {
-                    pj.exibir();
-                } else {
-                    System.out.println("Pessoa Jurídica não encontrada!");
-                }
+        } else if (tipo == 2) {
+            PessoaJuridica pj = repoJuridica.obter(id);
+            if (pj != null) {
+                pj.exibir();
+            } else {
+                System.out.println("Pessoa Jurídica não encontrada!");
             }
-            default -> System.out.println("Tipo inválido!");
+        } else {
+            System.out.println("Tipo inválido!");
         }
     }
 
@@ -184,18 +185,16 @@ public class Principal {
         System.out.print("Escolha o tipo: ");
         int tipo = scanner.nextInt();
 
-        switch (tipo) {
-            case 1 -> {
-                for (PessoaFisica pf : repoFisica.obterTodos()) {
-                    pf.exibir();
-                }
+        if (tipo == 1) {
+            for (PessoaFisica pf : repoFisica.obterTodos()) {
+                pf.exibir();
             }
-            case 2 -> {
-                for (PessoaJuridica pj : repoJuridica.obterTodos()) {
-                    pj.exibir();
-                }
+        } else if (tipo == 2) {
+            for (PessoaJuridica pj : repoJuridica.obterTodos()) {
+                pj.exibir();
             }
-            default -> System.out.println("Tipo inválido!");
+        } else {
+            System.out.println("Tipo inválido!");
         }
     }
 
@@ -203,48 +202,26 @@ public class Principal {
         System.out.print("Informe o prefixo dos arquivos: ");
         String prefixo = scanner.nextLine();
 
-        repoFisica.persistir(prefixo + ".fisica.bin");
-        repoJuridica.persistir(prefixo + ".juridica.bin");
-        System.out.println("Dados salvos com sucesso!");
+        try {
+            repoFisica.persistir(prefixo + ".fisica.bin");
+            repoJuridica.persistir(prefixo + ".juridica.bin");
+            System.out.println("Dados salvos com sucesso!");
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar os dados: " + e.getMessage());
+        }
     }
 
     private static void recuperarDados(Scanner scanner, PessoaFisicaRepo repoFisica, PessoaJuridicaRepo repoJuridica) {
         System.out.print("Informe o prefixo dos arquivos: ");
         String prefixo = scanner.nextLine();
 
-        repoFisica.recuperar(prefixo + ".fisica.bin");
-        repoJuridica.recuperar(prefixo + ".juridica.bin");
-        System.out.println("Dados recuperados com sucesso!");
-    }
-
-    private static class PessoaFisicaRepo {
-
-        public PessoaFisicaRepo() {
+        try {
+            repoFisica.recuperar(prefixo + ".fisica.bin");
+            repoJuridica.recuperar(prefixo + ".juridica.bin");
+            System.out.println("Dados recuperados com sucesso!");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao recuperar os dados: " + e.getMessage());
         }
-
-
-
-
-
-        private Iterable<PessoaFisica> obterTodos() {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-
-
-
-        private void excluir(int id) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        private void persistir(String string) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        private void recuperar(String string) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
     }
 
     private static class PessoaJuridicaRepo {
@@ -252,37 +229,8 @@ public class Principal {
         public PessoaJuridicaRepo() {
         }
 
-
-
-
-
-        private Iterable<PessoaJuridica> obterTodos() {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
         private void inserir(PessoaJuridica pessoaJuridica) {
             throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
-
-        private PessoaJuridica obter(int id) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        private void alterar(PessoaJuridica pj) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        private void excluir(int id) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        private void persistir(String string) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        private void recuperar(String string) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
     }
 }
